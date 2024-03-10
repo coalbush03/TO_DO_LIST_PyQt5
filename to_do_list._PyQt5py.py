@@ -1,9 +1,11 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QListWidget, QLineEdit, QHBoxLayout, QMainWindow
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QFile
 from PyQt5.QtGui import QPalette, QFont
 
-#klasa
+
+
+#klasa listy
 class ToDoList(QWidget):
   def __init__(self):
     #konstruktor
@@ -35,6 +37,7 @@ class ToDoList(QWidget):
 
     self.add_but.clicked.connect(self.add) #przypisanie do przycisku dodawania
     self.input.returnPressed.connect(self.add)# przypisanie przycisku enter do dodania
+    self.load_els()  #ładowanie pliki
     self.setLayout(self.layout) # ustawienie układu
 
 
@@ -45,12 +48,26 @@ class ToDoList(QWidget):
       el = '\u2022 ' + el #dodanie kropki
       self.el_list.addItem(el) #dodanie do listy GUI
       self.input.clear() #wyczyszczenie pola po dodatniu
+      self.save_els()  #zapis do pliku
+
+  def save_els(self):  #zapisanie listy
+    with open("elements.txt", "w") as file:
+      for task in self.elements:
+            file.write(task + "\n")
+
+  def load_els(self):
+    if QFile.exists("elements.txt"): 
+        with open("elements.txt", "r") as file:
+            els = file.read().splitlines() # podzial an lise
+            self.elements.extend(els) #dodanie do listy
+            for el in els:
+                self.el_list.addItem('\u2022 ' + el) #dodanie do listy gui
+    else:
+        print("NO FILE - LIST EMPTY")
 
 if __name__== "__main__":
+  #wywolanie
   application=QApplication(sys.argv)
-  win= ToDoList() #wywolanie
+  win= ToDoList() 
   win.show()
   sys.exit(application.exec_())
-
-
-
