@@ -40,7 +40,7 @@ class TodoListItem(QWidget):
     def remove(self):
         self.todo_list.remove_element(self.index)#usuniecie z listy elements i nadpisanie pliku tekstowego z listą (funkcja dalej w kodzie)
         for i in range(self.index,len(self.todo_list.elements)): 
-            self.todo_list.elements[i].index -= 1 #zmiejszenie indexow po popie
+            self.todo_list.elements[i].index -= 1 #zmiejszenie indexow po delete
         self.setParent(None) #usun widget
        
 
@@ -97,7 +97,7 @@ class ToDoList(QWidget):
             file.write(el.text_field.text() + "\n") #wpisanie tekstu z obiektów klasy ToDoListItem w liscie elements do pliku
 
   def remove_element(self, index): #funkcja wspomniana w funkcji remove w klasie TodoListItem
-    self.elements.pop(index)
+    del self.elements[index]
     self.save_els()
 
   def load_els(self):
